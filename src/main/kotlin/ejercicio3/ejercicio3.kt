@@ -93,7 +93,7 @@ class Usuario(val nombre:String,val id:Int=UtilidadesBiblioteca.generarIdentific
 fun main(){
     val libro= mutableListOf(Libro("hola","mundo","22/11/2003","miedo"),
         Libro("mundo","mundo","22/11/2003","miedo"))
-    val users= mutableListOf(Usuario("nico"))
+    val users= mutableListOf(Usuario("nico"),Usuario("paco"),Usuario("fran"),Usuario("antonio"),Usuario("edu"))
     val registroPrestamos = RegistroPrestamos()
     val gestorBiblioteca = GestorBiblioteca(users,libro,registroPrestamos)
     while (true){
@@ -114,3 +114,8 @@ fun main(){
         }
     }
 }
+//**Programa Principal**:
+//
+//- Crear instancias de varios usuarios y realizar operaciones de préstamo y devolución utilizando el sistema modificado.
+//- Utilizar la clase **`GestorBiblioteca`,** que hará uso de **`RegistroPrestamos`**, para realizar las operaciones de prestamos y devolución y mostrar el historial de préstamos y devoluciones.
+//- Demostrar cómo se puede acceder a la información de los libros y usuarios de manera controlada a través de los métodos públicos sin exponer directamente las propiedades internas.
