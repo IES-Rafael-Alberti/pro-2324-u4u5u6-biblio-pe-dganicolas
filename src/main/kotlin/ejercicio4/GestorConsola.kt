@@ -11,11 +11,13 @@ object GestorConsola{
         println("EL $elemento no puede ser negativo")
     }
 
-    fun agregarLibro(libro: Libro) {
+    fun agregarLibro(libro: ElementoBiblioteca) {
         println("El ${libro.saberTitulo()} con id:${libro.saberId()} ha sido agregado")
     }
-    fun eliminarLibro(libro: Libro) {
-        println("El ${libro.saberTitulo()} con id:${libro.saberId()} ha sido agregado")
+    fun eliminarLibro(libro: ElementoBiblioteca?) {
+        if (libro != null) {
+            println("El ${libro.saberTitulo()} con id:${libro.saberId()} ha sido agregado")
+        }
     }
 
     fun libroYaSidoAgregado(libro: Libro) {
@@ -30,19 +32,19 @@ object GestorConsola{
         println("El ${libro.saberTitulo()} con id:${libro.saberId()} ha sido prestado")
     }
 
-    fun libroPrestado(libro: Libro) {
-        println("El ${libro.saberTitulo()} con id:${libro.saberId()} ya ha sido prestado")
+    fun libroPrestado(libro: ElementoBiblioteca?) {
+        println("El ${libro?.saberTitulo()} con id:${libro?.saberId()} ya ha sido prestado")
     }
 
-    fun libroDevuelto(libro: Libro) {
-        println("El ${libro.saberTitulo()} con id:${libro.saberId()} ha sido devuelto")
+    fun libroDevuelto(libro: ElementoBiblioteca?) {
+        println("El ${libro?.saberTitulo()} con id:${libro?.saberId()} ha sido devuelto")
     }
 
-    fun libronoPrestado(libro: Libro) {
-        println("El ${libro.saberTitulo()} con id:${libro.saberId()} no ha sido prestado")
+    fun libronoPrestado(libro: ElementoBiblioteca?) {
+        println("El ${libro?.saberTitulo()} con id:${libro?.saberId()} no ha sido prestado")
     }
 
-    fun disponibilidadDeUnLibro(libro: Libro?) {
+    fun disponibilidadDeUnLibro(libro: ElementoBiblioteca?) {
         if (libro != null){
             println("El ${libro.saberTitulo()} con id:${libro.saberId()} esta ${libro.saberEstado()}")
         }else{
@@ -50,7 +52,7 @@ object GestorConsola{
         }
     }
 
-    fun mostraLibros(libros: List<Libro>) {
+    fun mostraLibros(libros: List<ElementoBiblioteca>) {
         for (libro in libros){
             println("El ${libro.saberTitulo()} con id:${libro.saberId()} esta ${libro.saberEstado()}")
         }
@@ -121,18 +123,18 @@ object GestorConsola{
         println("6. retornar los libros en funcion de su estado")
     }
     fun opciones(numeroOpciones:Int):Int{
-        try {
+        return try {
             var numero = readln().toInt()
             if (numero <0 && numero< numeroOpciones){
                 throw IllegalArgumentException()
             }
-            return numero
+            numero
         }catch (e:NumberFormatException){
             errorOpciones()
-            return 0
+            0
         }catch (e:IllegalArgumentException){
             errorOpciones()
-            return 0
+            0
         }
     }
 
@@ -160,5 +162,13 @@ object GestorConsola{
 
     fun mostrarhistorial(historial: MutableList<String>?) {
         historial?.forEach { println(it) }
+    }
+
+    fun qeuTipoDeObjeto(): Int {
+        println("Que tipo de objeto queieres crear")
+        println("1. libro")
+        println("2.Dvd ")
+        println("3. Revistas")
+        return opciones(3)
     }
 }

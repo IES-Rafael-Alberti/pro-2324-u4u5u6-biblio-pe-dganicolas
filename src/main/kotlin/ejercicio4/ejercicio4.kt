@@ -41,15 +41,24 @@ interface Prestable{
 }
 
 abstract class ElementoBiblioteca (
+    protected val id:Int,
     protected val titulo: String,
-    protected  val autor: String,
+    protected val autor: String,
     protected val tematica: String,
-    protected val anoDePublicacion: String
-)
+    protected val anoDePublicacion: String,
+    protected var estado: Estado
+):Prestable{
+    open fun saberEstado() = this.estado
+    open fun saberTitulo()=this.titulo
+    open fun saberautor()=this.autor
+    open fun saberanoDePublicacion()=this.anoDePublicacion
+    open fun sabertematica()= this.tematica
+    open fun saberId()=this.id
+}
 
 
 class Libro(titulo:String, autor:String, anoDePublicacion:String,
-            tematica:String, private  var estado: Estado = Estado.DISPONIBLE,private val id:Int=UtilidadesBiblioteca.generarIdentificadorUnico()):ElementoBiblioteca(titulo,autor,tematica,anoDePublicacion),Prestable{
+            tematica:String, estado: Estado = Estado.DISPONIBLE, id:Int=UtilidadesBiblioteca.generarIdentificadorUnico()):ElementoBiblioteca(id,titulo,autor,tematica,anoDePublicacion,estado){
     init {
         require(id > 0){ GestorConsola.errorId("id") }
         require(titulo != ""){ GestorConsola.error("titulo") }
@@ -58,12 +67,64 @@ class Libro(titulo:String, autor:String, anoDePublicacion:String,
         require(autor != ""){ GestorConsola.error("autor") }
 
     }
-    fun saberEstado() = this.estado
-    fun saberTitulo()=this.titulo
-    fun saberautor()=this.autor
-    fun saberanoDePublicacion()=this.anoDePublicacion
-    fun sabertematica()= this.tematica
-    fun saberId()=this.id
+    override fun saberEstado() = this.estado
+    override fun saberTitulo()=this.titulo
+    override fun saberautor()=this.autor
+    override fun saberanoDePublicacion()=this.anoDePublicacion
+    override fun sabertematica()= this.tematica
+    override fun saberId()=this.id
+
+    override fun prestar() {
+        this.estado=Estado.PRESTADO
+    }
+
+    override fun devolver() {
+        this.estado=Estado.DISPONIBLE
+    }
+
+}
+class Revista(titulo:String, autor:String, anoDePublicacion:String,
+              tematica:String, estado: Estado = Estado.DISPONIBLE, id:Int=UtilidadesBiblioteca.generarIdentificadorUnico()):ElementoBiblioteca(id,titulo,autor,tematica,anoDePublicacion,estado){
+    init {
+        require(id > 0){ GestorConsola.errorId("id") }
+        require(titulo != ""){ GestorConsola.error("titulo") }
+        require(anoDePublicacion != ""){ GestorConsola.error("anoDePublicacion") }
+        require(tematica != ""){ GestorConsola.error("tematica") }
+        require(autor != ""){ GestorConsola.error("autor") }
+
+    }
+    override fun saberEstado() = this.estado
+    override fun saberTitulo()=this.titulo
+    override fun saberautor()=this.autor
+    override fun saberanoDePublicacion()=this.anoDePublicacion
+    override fun sabertematica()= this.tematica
+    override fun saberId()=this.id
+
+    override fun prestar() {
+        this.estado=Estado.PRESTADO
+    }
+
+    override fun devolver() {
+        this.estado=Estado.DISPONIBLE
+    }
+
+}
+class Dvd(titulo:String, autor:String, anoDePublicacion:String,
+          tematica:String, estado: Estado = Estado.DISPONIBLE, id:Int=UtilidadesBiblioteca.generarIdentificadorUnico()):ElementoBiblioteca(id,titulo,autor,tematica,anoDePublicacion,estado){
+    init {
+        require(id > 0){ GestorConsola.errorId("id") }
+        require(titulo != ""){ GestorConsola.error("titulo") }
+        require(anoDePublicacion != ""){ GestorConsola.error("anoDePublicacion") }
+        require(tematica != ""){ GestorConsola.error("tematica") }
+        require(autor != ""){ GestorConsola.error("autor") }
+
+    }
+    override fun saberEstado() = this.estado
+    override fun saberTitulo()=this.titulo
+    override fun saberautor()=this.autor
+    override fun saberanoDePublicacion()=this.anoDePublicacion
+    override fun sabertematica()= this.tematica
+    override fun saberId()=this.id
 
     override fun prestar() {
         this.estado=Estado.PRESTADO
@@ -85,13 +146,15 @@ class Libro(titulo:String, autor:String, anoDePublicacion:String,
  * */
 class Usuario(val nombre:String,val id:Int=UtilidadesBiblioteca.generarIdentificadorUnicoUsers()){
     val listaLibro: MutableList<Libro> = mutableListOf()
-    fun agregarUnLibroAlUsuario(libro: Libro){
-        listaLibro.add(libro)
+    fun agregarUnLibroAlUsuario(libro: ElementoBiblioteca?){
+        listaLibro.add(libro as Libro)
         GestorConsola.ususarioCogeUnLibro(libro.saberId(),nombre)
 
     }
-    fun eliminarUnLibroAlUsuario(libro: Libro){
-        GestorConsola.ususarioDevuelveUnLibro(libro.saberId(),nombre)
+    fun eliminarUnLibroAlUsuario(libro: ElementoBiblioteca?){
+        if (libro != null) {
+            GestorConsola.ususarioDevuelveUnLibro(libro.saberId(),nombre)
+        }
         listaLibro.remove(libro)
     }
     fun consultarLibrosPrestado(){
@@ -123,3 +186,8 @@ fun main(){
         }
     }
 }
+//**Programa Principal**:
+//
+//- Demostrar la creación de  elementos de biblioteca (libros, revistas, DVDs) que hereden de **`ElementoBiblioteca`** y/o implementen la interfaz **`Prestable`**.
+//- Instanciar **`GestorBiblioteca`** pasando una instancia de **`RegistroPrestamos`** (que implementa **`IGestorPrestamos`**) para demostrar la inyección de dependencias.
+//- Realizar operaciones de préstamo y devolución, asegurando que el sistema maneja correctamente los elementos.

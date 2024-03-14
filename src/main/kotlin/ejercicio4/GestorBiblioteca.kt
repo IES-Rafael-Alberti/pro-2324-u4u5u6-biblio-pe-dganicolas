@@ -27,16 +27,27 @@ class UtilidadesBiblioteca{
     }
 }
 
-class GestorBiblioteca(val usuarios:MutableList<Usuario>,val catalogoDeLibros:MutableList<Libro>, val registroDePrestamos:IGestorPrestamos){
+class GestorBiblioteca(
+    val usuarios:MutableList<Usuario>,
+    val catalogoDeLibros: MutableList<Libro>, val registroDePrestamos:IGestorPrestamos){
     fun agregarUnLibroAlCatalogo(){
         val titulo = GestorConsola.preguntarTitulo()
         val autor = GestorConsola.preguntarAutor()
         val anoDePublicacion= GestorConsola.preguntaranoDePublicacion()
         val tematica = GestorConsola.preguntarTematica()
-        val libro = Libro(titulo,autor, anoDePublicacion, tematica)
-
-        GestorConsola.agregarLibro(libro)
-        catalogoDeLibros.add(libro)
+        var objeto= GestorConsola.qeuTipoDeObjeto()
+        while (objeto==0){
+            objeto= GestorConsola.qeuTipoDeObjeto()
+        }
+        catalogoDeLibros.addLast(
+            when (objeto){
+                1-> Libro(titulo,autor, anoDePublicacion, tematica)
+                2 -> Dvd(titulo,autor, anoDePublicacion, tematica)
+                else -> Revista(titulo,autor, anoDePublicacion, tematica)
+            } as Libro?
+        )
+        GestorConsola.agregarLibro(catalogoDeLibros.last())
+        catalogoDeLibros.add(catalogoDeLibros.last())
 
     }
     fun eliminarUnLibroAlCatalogo(){

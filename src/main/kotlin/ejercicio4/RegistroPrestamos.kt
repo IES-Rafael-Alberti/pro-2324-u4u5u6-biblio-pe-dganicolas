@@ -20,9 +20,9 @@ interface IGestorPrestamos{
     val prestamosActuales:MutableMap<Int,MutableList<String>>
     val historialUsuarios:MutableMap<Int,MutableList<String>>
     val historialLibros:MutableMap<Int,MutableList<String>>
-    fun registrarUnPrestamo(idUsuario:Usuario,libro: Libro)
-    fun devolverUnPrestamo(idUsuario:Usuario,libro: Libro)
-    fun borrarRegistroUsuario(idUsuario: Usuario,libro: Libro)
+    fun registrarUnPrestamo(idUsuario:Usuario, libro: ElementoBiblioteca?)
+    fun devolverUnPrestamo(idUsuario:Usuario, libro: ElementoBiblioteca?)
+    fun borrarRegistroUsuario(idUsuario: Usuario, libro: ElementoBiblioteca?)
     fun historialUsuarios(id:Int)
     fun historialLibros(id:Int)
 }
@@ -30,43 +30,49 @@ class RegistroPrestamos():IGestorPrestamos {
     override val prestamosActuales:MutableMap<Int,MutableList<String>> = mutableMapOf()
     override val historialUsuarios:MutableMap<Int,MutableList<String>> = mutableMapOf()
     override val historialLibros:MutableMap<Int,MutableList<String>> = mutableMapOf()
-    override fun registrarUnPrestamo(idUsuario:Usuario, libro: Libro){
+    override fun registrarUnPrestamo(idUsuario:Usuario, libro: ElementoBiblioteca?){
         if (prestamosActuales.containsKey(idUsuario.id)) {
-            prestamosActuales[idUsuario.id]?.addLast("el libro ${libro.saberTitulo()} con ID:${libro.saberId()} ha sido prestado para ${idUsuario.id}, a fecha de ${LocalDate.now()}")
+            prestamosActuales[idUsuario.id]?.addLast("el libro ${libro?.saberTitulo()} con ID:${libro?.saberId()} ha sido prestado para ${idUsuario.id}, a fecha de ${LocalDate.now()}")
         }
         else {
-            prestamosActuales[idUsuario.id] = mutableListOf("el libro ${libro.saberTitulo()} con ID:${libro.saberId()} ha sido prestado para ${idUsuario.id}, a fecha de ${LocalDate.now()}")
+            prestamosActuales[idUsuario.id] = mutableListOf("el libro ${libro?.saberTitulo()} con ID:${libro?.saberId()} ha sido prestado para ${idUsuario.id}, a fecha de ${LocalDate.now()}")
         }
 
         if (historialUsuarios.containsKey(idUsuario.id)) {
-            historialUsuarios[idUsuario.id]?.addLast("el libro ${libro.saberTitulo()} con ID:${libro.saberId()} ha sido prestado para ${idUsuario.id}, a fecha de ${LocalDate.now()}")
+            historialUsuarios[idUsuario.id]?.addLast("el libro ${libro?.saberTitulo()} con ID:${libro?.saberId()} ha sido prestado para ${idUsuario.id}, a fecha de ${LocalDate.now()}")
         }
         else {
-            historialUsuarios[idUsuario.id] = mutableListOf("el libro ${libro.saberTitulo()} con ID:${libro.saberId()} ha sido prestado para ${idUsuario.id}, a fecha de ${LocalDate.now()}")
+            historialUsuarios[idUsuario.id] = mutableListOf("el libro ${libro?.saberTitulo()} con ID:${libro?.saberId()} ha sido prestado para ${idUsuario.id}, a fecha de ${LocalDate.now()}")
         }
 
-        if (historialLibros.containsKey(libro.saberId())) {
-            historialLibros[libro.saberId()]?.addLast("el libro ${libro.saberTitulo()} con ID:${libro.saberId()} ha sido prestado para ${idUsuario.id}, a fecha de ${LocalDate.now()}")
-        }
-        else {
-            historialLibros[libro.saberId()] = mutableListOf("el libro ${libro.saberTitulo()} con ID:${libro.saberId()} ha sido prestado para ${idUsuario.id}, a fecha de ${LocalDate.now()}")
+        if (libro != null) {
+            if (historialLibros.containsKey(libro.saberId())) {
+                historialLibros[libro.saberId()]?.addLast("el libro ${libro.saberTitulo()} con ID:${libro.saberId()} ha sido prestado para ${idUsuario.id}, a fecha de ${LocalDate.now()}")
+            }
+            else {
+                historialLibros[libro.saberId()] = mutableListOf("el libro ${libro.saberTitulo()} con ID:${libro.saberId()} ha sido prestado para ${idUsuario.id}, a fecha de ${LocalDate.now()}")
+            }
         }
         idUsuario.agregarUnLibroAlUsuario(libro)
         GestorConsola.devolverPrestarLibro(historialUsuarios[idUsuario.id]?.last())
     }
-    override fun devolverUnPrestamo(idUsuario:Usuario, libro: Libro){
-        historialUsuarios[idUsuario.id]?.addLast("el libro ${libro.saberTitulo()} con ID:${libro.saberId()} ha sido devuelto por ${idUsuario.id}, a fecha de ${LocalDate.now()}")
-        historialLibros[libro.saberId()]?.addLast("el libro ${libro.saberTitulo()} con ID:${libro.saberId()} ha sido devuelto por ${idUsuario.id}, a fecha de ${LocalDate.now()}")
+    override fun devolverUnPrestamo(idUsuario:Usuario, libro: ElementoBiblioteca?){
+        if (libro != null) {
+            historialUsuarios[idUsuario.id]?.addLast("el libro ${libro.saberTitulo()} con ID:${libro.saberId()} ha sido devuelto por ${idUsuario.id}, a fecha de ${LocalDate.now()}")
+        }
+        if (libro != null) {
+            historialLibros[libro?.saberId()]?.addLast("el libro ${libro.saberTitulo()} con ID:${libro.saberId()} ha sido devuelto por ${idUsuario.id}, a fecha de ${LocalDate.now()}")
+        }
         borrarRegistroUsuario(idUsuario,libro)
         idUsuario.eliminarUnLibroAlUsuario(libro)
         GestorConsola.devolverPrestarLibro(historialUsuarios[idUsuario.id]?.last())
     }
 
-    override fun borrarRegistroUsuario(idUsuario: Usuario, libro: Libro) {
+    override fun borrarRegistroUsuario(idUsuario: Usuario, libro: ElementoBiblioteca?) {
         if (prestamosActuales[idUsuario.id]?.isEmpty() == true){
             prestamosActuales.remove(idUsuario.id)
         }else{
-            val libroABorrar = prestamosActuales[idUsuario.id]?.find { it.contains("${libro.saberId()}") }
+            val libroABorrar = prestamosActuales[idUsuario.id]?.find { it.contains("${libro?.saberId()}") }
             if (libroABorrar != null){
                 prestamosActuales[idUsuario.id]?.remove(libroABorrar)
             }
