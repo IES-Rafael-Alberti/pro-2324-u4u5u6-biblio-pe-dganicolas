@@ -1,7 +1,5 @@
 package org.pebiblioteca.ejercicio3
 
-import org.pebiblioteca.libro
-
 /**
  * ### **Ejercicio 3: Implementación de Control de Acceso y Clases Auxiliares en el Sistema de Gestión de Biblioteca**
  *
