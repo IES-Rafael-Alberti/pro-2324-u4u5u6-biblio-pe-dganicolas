@@ -36,14 +36,14 @@ interface Elementos{
 enum class Estado(desc:String){
     DISPONIBLE ("Disponible"), PRESTADO ("Prestado");
 }
-data class Libro(override val id:Int, override val titulo:String, override val autor:String, override val anoDePublicacion:String, override var tematica:String, override var estado: Estado = Estado.DISPONIBLE):
+data class Libro(override val titulo:String, override val autor:String, override val anoDePublicacion:String, override var tematica:String,override val id:Int =UtilidadesBiblioteca.generarIdentificadorUnico(), override var estado: Estado = Estado.DISPONIBLE):
     Elementos {
     init {
-        require(id < 0){ GestorConsola.errorId("id") }
-        require(titulo == ""){ GestorConsola.error("titulo") }
-        require(anoDePublicacion == ""){ GestorConsola.error("anoDePublicacion") }
-        require(tematica == ""){ GestorConsola.error("tematica") }
-        require(autor == ""){ GestorConsola.error("autor") }
+        require(id > 0){ GestorConsola.errorId("id") }
+        require(titulo != ""){ GestorConsola.error("titulo") }
+        require(anoDePublicacion != ""){ GestorConsola.error("anoDePublicacion") }
+        require(tematica != ""){ GestorConsola.error("tematica") }
+        require(autor != ""){ GestorConsola.error("autor") }
 
     }
 }
@@ -168,7 +168,7 @@ class GestorBiblioteca(val catalogoDeLibros:MutableList<Elementos>, val registro
         val autor = GestorConsola.preguntarAutor()
         val anoDePublicacion= GestorConsola.preguntaranoDePublicacion()
         val tematica = GestorConsola.preguntarTematica()
-        val libro = Libro(id,titulo,autor, anoDePublicacion, tematica)
+        val libro = Libro(titulo,autor, anoDePublicacion,tematica)
 
         if (libro !in catalogoDeLibros){
             GestorConsola.agregarLibro(libro)
@@ -202,8 +202,8 @@ class GestorBiblioteca(val catalogoDeLibros:MutableList<Elementos>, val registro
             GestorConsola.libronoPrestado(libro)
         }
     }
-    fun consultarDisponibilidadDeUnLibro(libro: Elementos){
-        val unLibro= catalogoDeLibros.find{it.id == libro.id}
+    fun consultarDisponibilidadDeUnLibro(libro: Int){
+        val unLibro= catalogoDeLibros.find{it.id == libro}
         GestorConsola.disponibilidadDeUnLibro(unLibro)
     }
     fun retornarLosLibrosEnFuncionDeSuEstado(estado: org.pebiblioteca.Estado?){
@@ -217,4 +217,13 @@ class GestorBiblioteca(val catalogoDeLibros:MutableList<Elementos>, val registro
             }
         }
     }
+}
+//**Programa Principal**:
+//
+//- Utilizar los métodos estáticos de **`UtilidadesBiblioteca`** para mejorar la interacción con el usuario al momento de agregar libros.
+//- Demostrar el uso de estos métodos estáticos mostrando un flujo de uso claro, asegúrate que los identificadores únicos son asignados correctamente a los libros.
+fun main() {
+    val GestorBiblioteca = GestorBiblioteca(mutableListOf(), mutableListOf())
+    GestorBiblioteca.agregarUnLibroAlCatalogo()
+    GestorBiblioteca.consultarDisponibilidadDeUnLibro(1)
 }

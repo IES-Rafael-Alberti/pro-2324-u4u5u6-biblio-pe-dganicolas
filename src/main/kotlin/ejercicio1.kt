@@ -1,7 +1,5 @@
 package org.pebiblioteca
 
-import org.pebiblioteca.ejercicio2.Elementos
-import org.pebiblioteca.ejercicio2.GestorConsola
 
 /**### **Ejercicio 1: Sistema de Gestión de Biblioteca**
 
@@ -36,12 +34,12 @@ interface Elementos{
     val autor:String
     val anoDePublicacion:String
     var tematica:String
-    var estado: org.pebiblioteca.ejercicio2.Estado
+    var estado: Estado
 }
 enum class Estado(desc:String){
     DISPONIBLE ("Disponible"), PRESTADO ("Prestado");
 }
-data class libro(override val id:Int, override val titulo:String, override val autor:String, override val anoDePublicacion:String, override var tematica:String, override var estado: org.pebiblioteca.ejercicio2.Estado = org.pebiblioteca.ejercicio2.Estado.DISPONIBLE):
+data class libro(override val id:Int, override val titulo:String, override val autor:String, override val anoDePublicacion:String, override var tematica:String, override var estado: Estado = Estado.DISPONIBLE):
     Elementos {
     init {
         require(id < 0){ GestorConsola.errorId("id")}
@@ -140,17 +138,17 @@ class GestorBiblioteca(val catalogoDeLibros:MutableList<Elementos>, val registro
         }
     }
     fun registrarUnPrestamo(libro: Elementos){
-        if (libro.estado == org.pebiblioteca.ejercicio2.Estado.DISPONIBLE){
+        if (libro.estado == Estado.DISPONIBLE){
             GestorConsola.prestarLibro(libro)
-            libro.estado = org.pebiblioteca.ejercicio2.Estado.PRESTADO
+            libro.estado = Estado.PRESTADO
         }else{
             GestorConsola.libroPrestado(libro)
         }
     }
     fun devolverUnLibro(libro: Elementos){
-        if (libro.estado == org.pebiblioteca.ejercicio2.Estado.PRESTADO){
+        if (libro.estado == Estado.PRESTADO){
             GestorConsola.libroDevuelto(libro)
-            libro.estado = org.pebiblioteca.ejercicio2.Estado.DISPONIBLE
+            libro.estado = Estado.DISPONIBLE
         }else{
             GestorConsola.libronoPrestado(libro)
         }
@@ -159,12 +157,12 @@ class GestorBiblioteca(val catalogoDeLibros:MutableList<Elementos>, val registro
         val unLibro= catalogoDeLibros.find{it.id == libro.id}
         GestorConsola.disponibilidadDeUnLibro(unLibro)
     }
-    fun retornarLosLibrosEnFuncionDeSuEstado(estado: org.pebiblioteca.ejercicio2.Estado?){
-        if (estado == org.pebiblioteca.ejercicio2.Estado.DISPONIBLE){
-            GestorConsola.mostraLibros(catalogoDeLibros.filter { it.estado == org.pebiblioteca.ejercicio2.Estado.DISPONIBLE })
+    fun retornarLosLibrosEnFuncionDeSuEstado(estado: Estado?){
+        if (estado == Estado.DISPONIBLE){
+            GestorConsola.mostraLibros(catalogoDeLibros.filter { it.estado == Estado.DISPONIBLE })
         }else{
-            if (estado == org.pebiblioteca.ejercicio2.Estado.PRESTADO){
-            GestorConsola.mostraLibros(catalogoDeLibros.filter { it.estado == org.pebiblioteca.ejercicio2.Estado.PRESTADO })
+            if (estado == Estado.PRESTADO){
+            GestorConsola.mostraLibros(catalogoDeLibros.filter { it.estado == Estado.PRESTADO })
             }else{
                 GestorConsola.mostraLibros(catalogoDeLibros)
             }
