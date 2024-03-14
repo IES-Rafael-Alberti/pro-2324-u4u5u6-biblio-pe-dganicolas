@@ -1,7 +1,5 @@
 package org.pebiblioteca.ejercicio3
 
-import org.pebiblioteca.libro
-
 /**
  * ### **Ejercicio 3: Implementación de Control de Acceso y Clases Auxiliares en el Sistema de Gestión de Biblioteca**
  *
@@ -47,7 +45,7 @@ enum class Estado(desc:String){
 
 /**2. **Modificaciones en la Clase `Libro`**:
  *    - Implementar control de acceso en las propiedades para asegurar que solo se puedan modificar internamente en la clase (privadas) y proporcionar métodos públicos para acceder a ellas de manera controlada si es necesario*/
-data class Libro(private  val titulo:String, val autor:String, private  val anoDePublicacion:String, private  var tematica:String, private  var estado: Estado = Estado.DISPONIBLE,private val id:Int=UtilidadesBiblioteca.generarIdentificadorUnico()){
+class Libro(private  val titulo:String, val autor:String, private  val anoDePublicacion:String, private  var tematica:String, private  var estado: Estado = Estado.DISPONIBLE,private val id:Int=UtilidadesBiblioteca.generarIdentificadorUnico()){
     init {
         require(id > 0){ GestorConsola.errorId("id") }
         require(titulo != ""){ GestorConsola.error("titulo") }
