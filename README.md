@@ -260,7 +260,7 @@ Optimizar y extender las capacidades del sistema de gestión de biblioteca media
    - Ejercicio 1: **`ejercicio-1-gestion-biblioteca`**
    - Ejercicio 2: **`ejercicio-2-metodos-estaticos`**
    - Ejercicio 3: **`ejercicio-3-clases-contenido`**
-   - Ejercicio 4: **`ejercicio-4-herencia-interfaces`**
+   - Ejercicio 4: **`ejercicio-4-herencia-interfaces`** 
    - Ejercicio 5: **`ejercicio-5-jerarquia-clases`**
    - Ejercicio 6: **`ejercicio-6-clases-genericas`**
    - Ejercicio 7: **`ejercicio-7-librerias-clases`**
