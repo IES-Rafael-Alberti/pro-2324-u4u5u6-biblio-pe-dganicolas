@@ -1,6 +1,4 @@
 package org.pebiblioteca
-
-package org.pebiblioteca
 /**### **Ejercicio 1: Sistema de Gestión de Biblioteca**
 
  **Criterio global asociado**: 1. Instancia objetos y hacer uso de ellos.
@@ -39,13 +37,13 @@ interface Elementos{
 enum class Estado(desc:String){
     DISPONIBLE ("Disponible"), PRESTADO ("Prestado");
 }
-data class libro(override val id:Int, override val titulo:String, override val autor:String, override val anoDePublicacion:String, override var tematica:String, override var estado:Estado=Estado.DISPONIBLE):Elementos{
+class libro(override val id:Int, override val titulo:String, override val autor:String, override val anoDePublicacion:String, override var tematica:String, override var estado:Estado=Estado.DISPONIBLE):Elementos{
     init {
-        require(id < 0){GestorConsola.errorId("id")}
-        require(titulo == ""){GestorConsola.error("titulo")}
-        require(anoDePublicacion == ""){GestorConsola.error("anoDePublicacion")}
-        require(tematica == ""){GestorConsola.error("tematica")}
-        require(autor == ""){GestorConsola.error("autor")}
+        require(id > 0){GestorConsola.errorId("id")}
+        require(titulo != ""){GestorConsola.error("titulo")}
+        require(anoDePublicacion != ""){GestorConsola.error("anoDePublicacion")}
+        require(tematica != ""){GestorConsola.error("tematica")}
+        require(autor != ""){GestorConsola.error("autor")}
 
     }
 }
@@ -62,7 +60,7 @@ object GestorConsola{
         println("El ${libro.titulo} con id:${libro.id} ha sido agregado")
     }
     fun eliminarLibro(libro: Elementos) {
-        println("El ${libro.titulo} con id:${libro.id} ha sido agregado")
+        println("El ${libro.titulo} con id:${libro.id} ha sido eliminado")
     }
 
     fun libroYaSidoAgregado(libro: Elementos) {
@@ -152,8 +150,8 @@ class GestorBiblioteca(val catalogoDeLibros:MutableList<Elementos>,val registroD
             GestorConsola.libronoPrestado(libro)
         }
     }
-    fun consultarDisponibilidadDeUnLibro(libro: Elementos){
-        val unLibro= catalogoDeLibros.find{it.id == libro.id}
+    fun consultarDisponibilidadDeUnLibro(libro: Int){
+        val unLibro= catalogoDeLibros.find{it.id == libro}
         GestorConsola.disponibilidadDeUnLibro(unLibro)
     }
     fun retornarLosLibrosEnFuncionDeSuEstado(estado:Estado?){
@@ -167,4 +165,20 @@ class GestorBiblioteca(val catalogoDeLibros:MutableList<Elementos>,val registroD
             }
         }
     }
+}
+/**
+ *    - Instanciar una **`GestorBiblioteca:`**
+ *    - Agregar al menos tres libros al catálogo.
+ *    - Realizar al menos dos préstamo y dos devoluciones. Tanto un préstamo, como una devolución tiene que ser errónea, debido al estado del libro.
+ *    - Mostrar el estado actual de los libros.
+ * */
+fun main() {
+    val libros :MutableList<Elementos> = mutableListOf(libro(1,"nico","casi","24/11/3004","XD",Estado.PRESTADO),libro(2,"XD","casi","24/11/3004","XD"),libro(3,"AAAA","XD","24/11/3004","XD"))
+    val gestorBiblioteca=GestorBiblioteca(libros, mutableListOf())
+    gestorBiblioteca.registrarUnPrestamo(libros[1])
+    gestorBiblioteca.registrarUnPrestamo(libros[2])
+    gestorBiblioteca.registrarUnPrestamo(libros[0])
+    gestorBiblioteca.consultarDisponibilidadDeUnLibro(1)
+    gestorBiblioteca.devolverUnLibro(libros[1])
+    gestorBiblioteca.eliminarUnLibroAlCatalogo(libros[1])
 }
